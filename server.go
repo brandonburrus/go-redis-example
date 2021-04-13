@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 
@@ -23,11 +24,17 @@ func getEnv(env, defaultValue string) string {
 }
 
 func getRedisClient() *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr:	  redisHost + ":" + redisPort,
+	redisAddr := redisHost + ":" + redisPort
+	log.Printf("event=redis_connect redis_addr=%s", redisAddr)
+	r := redis.NewClient(&redis.Options{
+		Addr:	  redisAddr,
 		Password: "",
 		DB: 	  0,
 	})
+	if r == nil {
+		log.Printf("event=redis_fail")
+	}
+	return r
 }
 
 func helloWorld(ctx *gin.Context) {
