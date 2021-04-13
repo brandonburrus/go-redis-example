@@ -25,7 +25,7 @@ func getEnv(env, defaultValue string) string {
 
 func getRedisClient() *redis.Client {
 	redisAddr := redisHost + ":" + redisPort
-	log.Printf("event=redis_connect redis_addr=%s", redisAddr)
+	log.Printf("event=redis_connect redis_host=%s redis_port=%s redis_addr=%s", redisHost, redisPort, redisAddr)
 	r := redis.NewClient(&redis.Options{
 		Addr:	  redisAddr,
 		Password: "",
@@ -48,6 +48,7 @@ type Count struct {
 func getCounter(ctx *gin.Context) {
 	val, err := rdb.Get("count").Result()
 	if err != nil {
+		log.Printf("event_name=error err=%s", err.Error())
 		ctx.String(http.StatusInternalServerError, "")
 		return
 	} 
