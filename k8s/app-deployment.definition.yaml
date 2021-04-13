@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-redis
+  namespace: go-redis
+spec:
+  selector:
+    matchLabels:
+      app: go-redis
+  template:
+    metadata:
+      namespace: go-redis
+      labels:
+        app: go-redis
+    spec:
+      containers:
+        - name: go-redis
+          image: brandonburrus/go-redis-example:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
